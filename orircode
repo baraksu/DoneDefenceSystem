@@ -20,12 +20,12 @@
 
     Color db ?
     
-    
+    msg1 db 13,10,"enter a number between 051-320: $" 
     w equ 50      
     
     h equ 25    
-
-
+    logo db "  ____                                       ",13,10," |  _ \ _ __ ___  _ __   ___               ",13,10," | | | | '__/ _ \| '_ \ / _ \                 ",13,10," | |_| | | | (_) | | | |  __/                   ",13,10," |____/|_|  \___/|_| |_|\___|                ",13,10," |  _ \  ___ / _| ___ _ __   ___ ___       ",13,10," | | | |/ _ \ |_ / _ \ '_ \ / __/ _ \        ",13,10," | |_| |  __/  _|  __/ | | | (_|  __/          ",13,10," |____/ \___|_|  \___|_| |_|\___\___|       ",13,10," / ___| _   _ ___| |_ ___ _ __ ___          ",13,10," \___ \| | | / __| __/ _ \ '_ ` _ \           ",13,10,"  ___) | |_| \__ \ ||  __/ | | | | |            ",13,10," |____/ \__, |___/\__\___|_| |_| |_|         ",13,10,"        |___/                                  ",13,10,"$"
+    
 
 .CODE      
 jmp start                                                  
@@ -319,7 +319,7 @@ ENDP PIXEL
 
 draw_line macro x ,color
     local looping space
-    
+    pusha
     mov ah, 0ch
     mov al, color
     mov cx, x 
@@ -336,7 +336,7 @@ draw_line macro x ,color
     je space    
     cmp dx, 0 
     jne looping          
-              
+    popa          
               
               
               
@@ -348,10 +348,24 @@ start:
 mov ax,@data
 mov ds, ax
 
+
+  lea dx,logo
+  mov ah,09
+  int 21h
+  realStart:
+  
+  lea dx,msg1
+  mov ah,09
+  int 21h
+  
   xor ax,ax
   mov ah,01h
   int 21h
-  xor ah,ah
+  xor ah,ah 
+  cmp ax,30h
+  jb realStart
+  cmp ax,39h
+  ja realStart
   sub ax,30h 
   mov cx,100
   mul cx
@@ -360,6 +374,10 @@ mov ds, ax
   mov ah,01h
   int 21h
   xor ah,ah 
+  cmp ax,30h
+  jb realStart
+  cmp ax,39h
+  ja realStart
   sub ax,30h
   mov cx,10
   mul cx
@@ -367,17 +385,24 @@ mov ds, ax
    mov ah,01h
   int 21h   
   xor ah,ah 
+  cmp ax,30h
+  jb realStart
+  cmp ax,39h
+  ja realStart 
   sub ax,30h
   add bx,ax
   cmp bx,320
-  ja start
+  ja realStart
   
   cmp bx, w
-  jb start
+  jb realStart
  
   push bx 
   
   s:
+  lea dx,msg1
+  mov ah,09
+  int 21h
   xor ax,ax
   mov ah,01h
   int 21h
@@ -413,11 +438,18 @@ mov ds, ax
      int 10h 
      
   pop bx
-  draw_line bx, 1
-                 
-  pop bx
-  draw_line bx, 3
-
+  pop cx
+  cmp bx,cx
+  ja ibbx
+  jbe ibcx
+  ibbx: 
+   draw_line cx, 4
+   draw_line bx, 14
+   jmp ddl
+  ibcx: 
+  draw_line bx, 4
+  draw_line cx, 14
+  ddl:
 
 ; draw upper line:
 
