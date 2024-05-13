@@ -21,8 +21,11 @@
     Color db ?
     
     msg1 db 13,10,"enter a number between 051-320: $" 
-    w equ 50      
-    
+    w equ 50  
+    jmpLength dw 5    
+    redLine dw ?
+    yellowLine dw ?    
+    xColor db 2
     h equ 25    
     logo db "  ____                                       ",13,10," |  _ \ _ __ ___  _ __   ___               ",13,10," | | | | '__/ _ \| '_ \ / _ \                 ",13,10," | |_| | | | (_) | | | |  __/                   ",13,10," |____/|_|  \___/|_| |_|\___|                ",13,10," |  _ \  ___ / _| ___ _ __   ___ ___       ",13,10," | | | |/ _ \ |_ / _ \ '_ \ / __/ _ \        ",13,10," | |_| |  __/  _|  __/ | | | (_|  __/          ",13,10," |____/ \___|_|  \___|_| |_|\___\___|       ",13,10," / ___| _   _ ___| |_ ___ _ __ ___          ",13,10," \___ \| | | / __| __/ _ \ '_ ` _ \           ",13,10,"  ___) | |_| \__ \ ||  __/ | | | | |            ",13,10," |____/ \__, |___/\__\___|_| |_| |_|         ",13,10,"        |___/                                  ",13,10,"$"
     
@@ -341,8 +344,42 @@ draw_line macro x ,color
               
               
     
-endm draw_line
+endm draw_line  
 
+proc x
+    mov bp,sp
+    pusha 
+    mov bx,[bp+2]
+    mov cx,[bp+4]
+    mov dx, [bp+6]
+    mov ax, [bp+8]
+    mov ah,0Ch
+    rl:
+    int 10h
+    inc cx
+    inc dx 
+    dec bx
+    cmp bx,0
+    jne rl 
+    
+    mov bx,[bp+2]
+    mov cx,[bp+4]
+    mov dx, [bp+6]
+    mov ax, [bp+8]
+    mov ah,0ch 
+    add cx,bx
+    dec cx
+          
+    arl:
+    int 10h
+    dec cx
+    inc dx 
+    dec bx
+    cmp bx,0
+    jne arl
+    popa      
+    ret 8
+    endp 
 
 start:
 mov ax,@data
@@ -396,7 +433,7 @@ mov ds, ax
   
   cmp bx, w
   jb realStart
- 
+    
   push bx 
   
   s:
@@ -436,19 +473,24 @@ mov ds, ax
      mov al, 13h 
 
      int 10h 
-     
+  
+    
   pop bx
-  pop cx
+  pop cx   
   cmp bx,cx
   ja ibbx
   jbe ibcx
   ibbx: 
    draw_line cx, 4
    draw_line bx, 14
+   mov redLine, cx
+   mov yellowLine, bx
    jmp ddl
   ibcx: 
   draw_line bx, 4
   draw_line cx, 14
+  mov redLine, bx
+  mov yellowLine, cx
   ddl:
 
 ; draw upper line:
@@ -587,15 +629,14 @@ u4: mov ah, 0ch    ; put pixel
 
 	               
 
+	    mov al, xColor
+	    mov dx, 100
+	    mov cx, 290
+	    mov bx, 20
+	    jmp print
 	      
-
+          
 	               
-
-	mov ah, 00h
-
-	int 16h
-
- 
 
 
 
@@ -605,10 +646,141 @@ u4: mov ah, 0ch    ; put pixel
 
 ;wait for keypress
 
+  click:
   mov ah,00
-
-  int 16h			
-
+  int 16h
+  
+  cmp ah, 75
+  je left
+  cmp ah, 72
+  je up
+  cmp ah, 77
+  je right
+  cmp ah, 80
+  je down
+  
+  jmp click
+           
+  left:
+  push 0
+  push dx
+  push cx
+  push bx
+  call x
+  
+  mov al,xColor 
+  sub cx,jmpLength
+  cmp cx, 0
+  jg  print
+  add cx, jmpLength 
+  jmp click
+  
+  right:
+  push 0
+  push dx
+  push cx
+  push bx
+  call x
+  
+  mov al,xColor 
+  add cx,jmpLength
+  push bx
+  push cx
+  
+  mov cx,bx
+  mov bx,320
+  sub bx,cx
+  pop cx
+  
+  cmp cx, bx
+  jbe  printbx 
+  pop bx
+  sub cx, jmpLength
+  jmp print 
+     
+  
+  up:
+  push 0
+  push dx
+  push cx
+  push bx
+  call x
+  
+  mov al,xColor 
+  sub dx,jmpLength
+  cmp dx, 0
+  jg  print
+  add dx, jmpLength 
+  jmp print 
+   
+  
+  down:
+  push 0
+  push dx
+  push cx
+  push bx
+  call x
+ 
+  mov al,xColor  
+  add dx,jmpLength
+  
+  push bx
+  push cx
+  mov cx,bx
+  mov bx,200
+  sub bx,cx
+  pop cx
+  
+  cmp dx, bx
+  jbe  printbx 
+  pop bx
+  sub dx, jmpLength 
+  jmp print 
+    
+  printbx:
+  pop bx
+  print: 
+     cmp cx, redLine 
+     jb red
+    
+  
+     cmp cx,yellowLine
+     jb yellow
+     jae reset 
+     
+     
+     
+     
+     jmp click 			
+     
+   yellow:
+   mov xColor, 14
+   mov al,xColor 
+     push ax
+     push dx
+     push cx
+     push bx
+     call x
+   jmp click
+   red:  
+   mov xColor, 4
+   mov al,xColor 
+     push ax
+     push dx
+     push cx
+     push bx
+     call x
+   jmp click 
+   reset:
+   mov xColor, 2
+   mov al,xColor 
+     push ax
+     push dx
+     push cx
+     push bx
+     call x
+   jmp click 
+    
 
 
 ; return to text mode:
