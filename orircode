@@ -1,4 +1,4 @@
-.MODEL small
+                                                                         .MODEL small
 
 .STACK 256
 
@@ -380,7 +380,181 @@ proc x
     popa      
     ret 8
     endp 
-
+   
+   proc input
+      pop bp           
+              realStart:
+      
+      lea dx,msg1
+      mov ah,09
+      int 21h
+      
+      xor ax,ax
+      mov ah,01h
+      int 21h
+      xor ah,ah 
+      cmp ax,30h
+      jb realStart
+      cmp ax,39h
+      ja realStart
+      sub ax,30h 
+      mov cx,100
+      mul cx
+      xor bx,bx
+      mov bx,ax
+      mov ah,01h
+      int 21h
+      xor ah,ah 
+      cmp ax,30h
+      jb realStart
+      cmp ax,39h
+      ja realStart
+      sub ax,30h
+      mov cx,10
+      mul cx
+      add bx,ax
+       mov ah,01h
+      int 21h   
+      xor ah,ah 
+      cmp ax,30h
+      jb realStart
+      cmp ax,39h
+      ja realStart 
+      sub ax,30h
+      add bx,ax
+      cmp bx,320
+      ja realStart
+      
+      cmp bx, w
+      jb realStart
+        
+      push bx 
+      
+      s:
+      lea dx,msg1
+      mov ah,09
+      int 21h
+      xor ax,ax
+      mov ah,01h
+      int 21h
+      xor ah,ah
+      sub ax,30h 
+      mov cx,100
+      mul cx
+      xor bx,bx
+      mov bx,ax
+      mov ah,01h
+      int 21h
+      xor ah,ah 
+      sub ax,30h
+      mov cx,10
+      mul cx
+      add bx,ax
+       mov ah,01h
+      int 21h   
+      xor ah,ah 
+      sub ax,30h
+      add bx,ax
+      cmp bx,320
+      ja s 
+      
+      cmp bx, w
+      jb s
+      
+       push bx
+       push bp 
+   ret     
+             
+             
+   endp input
+   
+   
+   proc home
+            mov cx, w  ; column
+            mov dx, 120     ; row
+            mov al, 15     ; white
+        u1: mov ah, 0ch    ; put pixel
+            int 10h
+        
+            
+        
+            dec cx
+            cmp cx, 0
+            ja u1
+        
+         
+        
+        ; draw bottom line:
+        
+        
+        
+            mov cx, w  ; column
+            mov dx, 120+h   ; row
+            mov al, 15     ; white
+        u2: mov ah, 0ch    ; put pixel
+            int 10h
+        
+            
+        
+            dec cx
+        
+            cmp cx, 0
+        
+            ja u2
+        
+         
+        
+        ; draw left line:
+        
+        
+        
+            mov cx, 0    ; column
+        
+            mov dx, 120+h   ; row
+        
+            mov al, 15     ; white
+        
+        u3: mov ah, 0ch    ; put pixel
+        
+            int 10h
+        
+            
+        
+            dec dx
+        
+            cmp dx, 120
+        
+            ja u3 
+        
+            
+        
+            
+        
+        ; draw right line:
+        
+        
+        
+            mov cx, w  ; column
+        
+            mov dx, 120+h   ; row
+        
+            mov al, 15     ; white
+        
+        u4: mov ah, 0ch    ; put pixel
+        
+            int 10h
+        
+            
+        
+            dec dx
+        
+            cmp dx, 120
+        
+            ja u4 
+        ret  
+   endp home
+   
+   
 start:
 mov ax,@data
 mov ds, ax
@@ -389,85 +563,9 @@ mov ds, ax
   lea dx,logo
   mov ah,09
   int 21h
-  realStart:
-  
-  lea dx,msg1
-  mov ah,09
-  int 21h
-  
-  xor ax,ax
-  mov ah,01h
-  int 21h
-  xor ah,ah 
-  cmp ax,30h
-  jb realStart
-  cmp ax,39h
-  ja realStart
-  sub ax,30h 
-  mov cx,100
-  mul cx
-  xor bx,bx
-  mov bx,ax
-  mov ah,01h
-  int 21h
-  xor ah,ah 
-  cmp ax,30h
-  jb realStart
-  cmp ax,39h
-  ja realStart
-  sub ax,30h
-  mov cx,10
-  mul cx
-  add bx,ax
-   mov ah,01h
-  int 21h   
-  xor ah,ah 
-  cmp ax,30h
-  jb realStart
-  cmp ax,39h
-  ja realStart 
-  sub ax,30h
-  add bx,ax
-  cmp bx,320
-  ja realStart
-  
-  cmp bx, w
-  jb realStart
     
-  push bx 
-  
-  s:
-  lea dx,msg1
-  mov ah,09
-  int 21h
-  xor ax,ax
-  mov ah,01h
-  int 21h
-  xor ah,ah
-  sub ax,30h 
-  mov cx,100
-  mul cx
-  xor bx,bx
-  mov bx,ax
-  mov ah,01h
-  int 21h
-  xor ah,ah 
-  sub ax,30h
-  mov cx,10
-  mul cx
-  add bx,ax
-   mov ah,01h
-  int 21h   
-  xor ah,ah 
-  sub ax,30h
-  add bx,ax
-  cmp bx,320
-  ja s 
-  
-  cmp bx, w
-  jb s
-  
-   push bx   
+    call input
+      
      mov ah, 0
 
      mov al, 13h 
@@ -497,97 +595,7 @@ mov ds, ax
 
 
 
-    mov cx, w  ; column
-
-    mov dx, 120     ; row
-
-    mov al, 15     ; white
-
-u1: mov ah, 0ch    ; put pixel
-
-    int 10h
-
-    
-
-    dec cx
-
-    cmp cx, 0
-
-    ja u1
-
- 
-
-; draw bottom line:
-
-
-
-    mov cx, w  ; column
-
-    mov dx, 120+h   ; row
-
-    mov al, 15     ; white
-
-u2: mov ah, 0ch    ; put pixel
-
-    int 10h
-
-    
-
-    dec cx
-
-    cmp cx, 0
-
-    ja u2
-
- 
-
-; draw left line:
-
-
-
-    mov cx, 0    ; column
-
-    mov dx, 120+h   ; row
-
-    mov al, 15     ; white
-
-u3: mov ah, 0ch    ; put pixel
-
-    int 10h
-
-    
-
-    dec dx
-
-    cmp dx, 120
-
-    ja u3 
-
-    
-
-    
-
-; draw right line:
-
-
-
-    mov cx, w  ; column
-
-    mov dx, 120+h   ; row
-
-    mov al, 15     ; white
-
-u4: mov ah, 0ch    ; put pixel
-
-    int 10h
-
-    
-
-    dec dx
-
-    cmp dx, 120
-
-    ja u4    
+    call home    
 
                   
 
@@ -798,4 +806,3 @@ u4: mov ah, 0ch    ; put pixel
 
 
 ret
-
