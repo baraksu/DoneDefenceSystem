@@ -303,7 +303,8 @@ ENDP DrawLine2D
 
 ;-----------------
 
-PROC PIXEL
+PROC PIXEL  
+    ; that proc drow thw pixel you wont in the coler you wont cx= pointx dx = point y al = the coler you wont 
 
 	mov bh,0h
 
@@ -384,7 +385,7 @@ proc x
     endp 
    
    proc input
-    ; the proc get the imput from the users at the start
+    ; the proc get the imput from the users at the start to drow the fence
       pop bp           
      realStart:
       
@@ -472,7 +473,9 @@ proc x
    endp input
    
    
-   proc home
+   proc home 
+    ; that proc drow the Square in for the home
+    
             mov cx, w  ; column
             mov dx, 120     ; row
             mov al, 15     ; white
