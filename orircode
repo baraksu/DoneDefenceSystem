@@ -223,6 +223,7 @@ Endm absolute
 ;
 
 PROC DrawLine2D
+    ; that proc drow the roof of the house ax=x1 (the x of the first line) bx = x2 (x of the secend line) cx = y1 (y of the first line) dx = y2 (y of the secend line) 
 	mov cx, [point1X]
 	sub cx, [point2X]
 	absolute cx
