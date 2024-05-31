@@ -1,12 +1,5 @@
 # DoneDefenceSystem
 
-1. Get from the user the defence lines, yellow and red.
-2. Draw X as a drone.
-3. The drawn shall move by arrows
-4. When the drane is a yellow or red zone it shall replace the color.
-5. Draw the house.
-The size of the drawn shall be variable.
-The delta for each arrow shall be variable.
    
 # שם הפרויקט DoneDefenceSystem
 # שם המתכנת : אורי רלוי
@@ -21,3 +14,11 @@ The delta for each arrow shall be variable.
 ![image1](https://github.com/baraksu/DoneDefenceSystem/assets/87480521/a5e688cd-aaee-4b04-bc23-dba9768bc76d)
 ![image2](https://github.com/baraksu/DoneDefenceSystem/assets/87480521/2d9f077b-a3b0-43dd-ad2c-4d255dcfc569)
 ![image3](https://github.com/baraksu/DoneDefenceSystem/assets/87480521/1fa477d3-0278-44cf-986b-425fdad49de8)
+
+
+#שלבי פיתוח
+קודם כול התחלתי בלקלוט מספרים מהמשתמש ולצייר לפי זה את הגדרות אחרי זה מירתי את הבית ואז כתבתי את הרחפן שהוא יוכל לזוז והצבע שלו ישתנה שהוא עובר את הגדרות
+# מה ההיתי מוסיף לתוכנית בעתיד: 
+הייתי מוסיף עוד רחפנים שאתה יכול להזיז את כולם והצבע של כולם משתנה בהתם למקום שלהם
+# סיכום אישי: 
+במהלך הפרויקט הרגשתי שאני מאתגר את עצמי לכתוב תוכנה יותר מסובכת ממה אני רגיל לכתוב ושאני משתפר בלכתוב באסמבלי 
