@@ -22,7 +22,7 @@
     
     msg1 db 13,10,"enter a number between 051-320: $" 
     w equ 50  
-    jmpLength dw 5    
+    jmpLength dw 50   
     redLine dw ?
     yellowLine dw ?    
     xColor db 2
@@ -348,7 +348,7 @@ draw_line macro x ,color
     
 endm draw_line  
 
-proc x
+proc drowx
     ; that proc drow the x(the drone) the vribols are the x and y  of every  line in the drone 
     mov bp,sp
     pusha 
@@ -566,15 +566,12 @@ mov ax,@data
 mov ds, ax
 
 
-  lea dx,logo
+ lea dx,logo
   mov ah,09
   int 21h
-    
-    call input
-      
-     mov ah, 0
-
-     mov al, 13h 
+  call input
+  mov ah, 0
+  mov al, 13h 
 
      int 10h 
   
@@ -680,7 +677,7 @@ mov ds, ax
   push dx
   push cx
   push bx
-  call x
+  call drowx
   
   mov al,xColor 
   sub cx,jmpLength
@@ -694,7 +691,7 @@ mov ds, ax
   push dx
   push cx
   push bx
-  call x
+  call drowx
   
   mov al,xColor 
   add cx,jmpLength
@@ -718,7 +715,7 @@ mov ds, ax
   push dx
   push cx
   push bx
-  call x
+  call drowx
   
   mov al,xColor 
   sub dx,jmpLength
@@ -733,7 +730,7 @@ mov ds, ax
   push dx
   push cx
   push bx
-  call x
+  call drowx
  
   mov al,xColor  
   add dx,jmpLength
@@ -774,7 +771,7 @@ mov ds, ax
      push dx
      push cx
      push bx
-     call x
+     call drowx
    jmp click
    red:  
    mov xColor, 4
@@ -783,7 +780,7 @@ mov ds, ax
      push dx
      push cx
      push bx
-     call x
+     call drowx
    jmp click 
    reset:
    mov xColor, 2
@@ -792,7 +789,8 @@ mov ds, ax
      push dx
      push cx
      push bx
-     call x
+     call drowx
+     
    jmp click 
     
 
@@ -804,11 +802,6 @@ mov ds, ax
   mov al,03 ;text mode 3
 
   int 10h
-
-
-
-
-
 
 
 ret
