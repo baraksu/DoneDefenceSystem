@@ -348,6 +348,7 @@ draw_line macro x ,color
 endm draw_line  
 
 proc x
+    ; that proc drow the x(the drone) the vribols are the x and y  of every  line in the drone 
     mov bp,sp
     pusha 
     mov bx,[bp+2]
@@ -383,8 +384,9 @@ proc x
     endp 
    
    proc input
+    ; the proc get the imput from the users at the start
       pop bp           
-              realStart:
+     realStart:
       
       lea dx,msg1
       mov ah,09
